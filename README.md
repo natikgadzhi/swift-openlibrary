@@ -25,16 +25,27 @@ dependencies: [
 ```swift
 import OpenLibrary
 
-// Initialize the client
+// Initialize the client, optionally with a logger
 let client = OpenLibraryAPI()
 
-// Search for books
-let results = try await client.search(query: "Foundation Asimov")
+// Search for books in the user's system language
+// Returns an array of OpenLibraryWork objects
+let books = try await client.searchBooks(query: "Foundation Asimov")
 
-// Fetch book details
-let book = try await client.fetchBook(id: "OL1234W")
+// Fetch all editions for a specific work
+// Returns an array of OpenLibraryEdition objects
+let editions = try await client.getWorkEditions(workKey: "OL45883W")
+
+// With logging enabled (on Apple platforms)
+import OSLog
+let logger = Logger(subsystem: "com.yourapp", category: "openlibrary")
+let clientWithLogging = OpenLibraryAPI(logger: logger)
 ```
+
+## Logging
+
+The library supports logging through a simple protocol `OpenLibraryLoggerProtocol`. On Apple platforms, `OSLog.Logger` is supported out of the box. For other platforms, you can implement the protocol with your preferred logging solution.
 
 ## License
 
-MIT License. See LICENSE file for details. 
+MIT License. See [LICENSE](LICENSE) file for details. 
