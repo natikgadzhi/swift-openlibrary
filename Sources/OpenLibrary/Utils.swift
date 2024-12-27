@@ -18,26 +18,7 @@ public protocol OpenLibraryLoggerProtocol {
     /// Basic logging functions that implementations must provide
     func debug(_ message: @autoclosure () -> String)
     func info(_ message: @autoclosure () -> String)
-    func warning(_ message: @autoclosure () -> String)
     func error(_ message: @autoclosure () -> String)
-}
-
-extension OpenLibraryLoggerProtocol {
-    func debug(_ message: String) {
-        debug(String(message))
-    }
-
-    func info(_ message: String) {
-        info(String(message))
-    }
-
-    func warning(_ message: String) {
-        warning(String(message))
-    }
-
-    func error(_ message: String) {
-        error(String(message))
-    }
 }
 
 // On Apple platforms, patch extend the default Logger to work with KindleAPI
@@ -53,10 +34,6 @@ extension OpenLibraryLoggerProtocol {
 
         public func info(_ message: @autoclosure () -> String) {
             self.info("\(message())")
-        }
-
-        public func warning(_ message: @autoclosure () -> String) {
-            self.warning("\(message())")
         }
 
         public func error(_ message: @autoclosure () -> String) {
