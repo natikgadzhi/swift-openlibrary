@@ -1,12 +1,12 @@
 //
 //  OpenLibraryAPITests.swift
-//  ScrapesTests
 //
 //  Created by Natik Gadzhi on 12/21/24.
 //
 
 import Foundation
 import Testing
+import OpenLibrary
 
 struct OpenLibraryAPITests {
 

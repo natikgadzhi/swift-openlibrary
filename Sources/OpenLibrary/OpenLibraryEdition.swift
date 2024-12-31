@@ -1,6 +1,5 @@
 //
 //  OpenLibraryEdition.swift
-//  Scrapes
 //
 //  Created by Natik Gadzhi on 12/23/24.
 //
@@ -10,7 +9,7 @@ import Foundation
 /// Describes OpenLibrary API Editions response
 /// i.e. https://openlibrary.org/works/OL20057658W/editions.json
 public struct OpenLibraryEditionsResponse: Codable {
-    let entries: [OpenLibraryEdition]
+    public let entries: [OpenLibraryEdition]
 }
 
 /// Describes one particular edition of a ``OpenLibraryWork``

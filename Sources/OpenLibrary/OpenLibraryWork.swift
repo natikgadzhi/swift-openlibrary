@@ -1,6 +1,5 @@
 //
 //  OpenLibraryWork.swift
-//  Scrapes
 //
 //  Created by Natik Gadzhi on 12/23/24.
 //
@@ -16,7 +15,7 @@ import Foundation
 ///     - Consider adding pagination to the corresponding method
 ///
 public struct OpenLibrarySearchResponse: Codable {
-    let docs: [OpenLibraryWork]
+    public let docs: [OpenLibraryWork]
 }
 
 

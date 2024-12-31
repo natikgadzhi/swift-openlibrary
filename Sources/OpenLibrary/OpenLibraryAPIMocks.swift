@@ -1,6 +1,5 @@
 //
 //  OpenLibraryAPIMocks.swift
-//  Scrapes
 //
 //  Created by Natik Gadzhi on 12/23/24.
 //
@@ -23,7 +22,7 @@ public enum OpenLibraryAPIMocks {
 
     /// https://openlibrary.org/works/OL20057658W/editions.json
     ///
-    static let twitterAndTearGasEditions = """
+    public static let twitterAndTearGasEditions = """
     {
       "links": {
         "self": "/works/OL20057658W/editions.json",
@@ -412,7 +411,7 @@ public enum OpenLibraryAPIMocks {
 
     /// seach.json?q=Twitter%20and%20tear%20gas
     ///
-    static let search = """
+    public static let search = """
 {
     "numFound": 1,
     "start": 0,
