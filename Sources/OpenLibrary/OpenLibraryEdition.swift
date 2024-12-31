@@ -256,7 +256,7 @@ extension OpenLibraryEdition {
 
     /// Represents a single chapter in an edition Table of Contents
     ///
-    public struct Chapter: Codable {
+    public struct Chapter: Codable, Sendable {
 
         enum CodingKeys: String, CodingKey {
             case level
@@ -288,7 +288,7 @@ extension OpenLibraryEdition {
 
     /// Describes an edition physical format
     ///
-    public enum PhysicalFormat: String, Codable, CaseIterable {
+    public enum PhysicalFormat: String, Codable, CaseIterable, Sendable {
         case mp3CD = "mp3 cd"
         case paperback = "paperback"
         case hardcover = "hardcover"
