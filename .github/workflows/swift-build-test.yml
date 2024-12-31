@@ -12,9 +12,12 @@ jobs:
     
     strategy:
       matrix:
-        swift_version: ["6.0", "5.10", "5.9"]
+        # welp, Swift below 6 does not support swift-testing
+        swift_version: ["6.0"]
     
     steps:
+
+      # Somehow, swift on macos-latest by default is not yet 6.0?
     - uses: YOCKOW/Action-setup-swift@v1
       with:
         swift-version: ${{matrix.swift_version}}
