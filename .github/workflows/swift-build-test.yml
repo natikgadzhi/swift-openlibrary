@@ -15,9 +15,9 @@ jobs:
         swift_version: ["6.0", "5.10", "5.9"]
     
     steps:
-    - uses: swift-actions/setup-swift@v2
+    - uses: slashmo/install-swift@v0.1.0
       with:
-        swift-version: ${{matrix.swift_version}}
+        version: ${{ matrix.swift }}
     - uses: actions/checkout@v4
     - name: Build
       run: swift build -v
