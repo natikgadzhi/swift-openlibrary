@@ -1,5 +1,4 @@
 // swift-tools-version: 5.9
-// The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
 
@@ -20,17 +19,11 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "OpenLibrary",
-            swiftSettings: [
-                .enableExperimentalFeature("BareSlashRegexLiterals")
-            ]
+            name: "OpenLibrary"
         ),
         .testTarget(
             name: "OpenLibraryTests",
-            dependencies: ["OpenLibrary"],
-            swiftSettings: [
-                .enableExperimentalFeature("BareSlashRegexLiterals")
-            ]
+            dependencies: ["OpenLibrary"]
         ),
     ]
 )
