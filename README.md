@@ -1,13 +1,13 @@
 # OpenLibrary
 
-A Swift cross-platform library for interacting with the [OpenLibrary](https://openlibrary.org) API. This package provides a clean, type-safe interface to search books, fetch book details, and interact with other OpenLibrary endpoints.
+A Swift library for interacting with the [OpenLibrary](https://openlibrary.org) API. This package provides a clean, type-safe interface to search books, fetch book details, and interact with other OpenLibrary endpoints.
 
 ## Features
 
-- Cross-platform support (iOS, macOS, Linux)
+- ~~Cross-platform support (iOS, macOS, Linux)~~ nope, not yet.
 - Type-safe API client
 - Async/await based API
-- Configurable logging
+- Configurable logging compatible with `OSLog.Logger`
 - Zero external dependencies
 
 ## Installation
