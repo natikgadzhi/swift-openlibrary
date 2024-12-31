@@ -217,7 +217,7 @@ extension OpenLibraryEdition {
 
         // Custom decoding for description field that can be either a Description object or a String
         if let descriptionObject = try? container.decodeIfPresent(
-            Description.self, forKey: .description)
+            DetailedDescription.self, forKey: .description)
         {
             self.description = descriptionObject.value
         } else if let descriptionString = try? container.decodeIfPresent(
@@ -237,82 +237,4 @@ extension OpenLibraryEdition {
             self.language = nil
         }
     }
-}
-
-// MARK: - Supporting Types
-
-extension OpenLibraryEdition {
-
-    public struct LanguageDescription: Codable {
-        let key: String
-    }
-
-    /// OpenLibrary field wrapped in a type + value struct
-    ///
-    public struct Description: Codable {
-        let type: String
-        let value: String
-    }
-
-    /// Represents a single chapter in an edition Table of Contents
-    ///
-    public struct Chapter: Codable, Sendable {
-
-        enum CodingKeys: String, CodingKey {
-            case level
-            case label
-            case title
-            case page = "pagenum"
-        }
-
-        let level: Int
-        let label: String
-        let title: String
-        let page: String
-    }
-
-    /// Describes a wrapped date time type
-    ///
-    public struct OLDateTime: Codable {
-        let type: String
-        let value: Date
-    }
-
-    /// Describes possible book formats, agnostic of the book provider
-    ///
-    public enum BookFormat: String, Codable {
-        case ebook
-        case paper
-        case audio
-    }
-
-    /// Describes an edition physical format
-    ///
-    public enum PhysicalFormat: String, Codable, CaseIterable, Sendable {
-        case mp3CD = "mp3 cd"
-        case paperback = "paperback"
-        case hardcover = "hardcover"
-        case ebook = "ebook"
-        case audioCD = "audio cd"
-
-        public init(from decoder: Decoder) throws {
-            let container = try decoder.singleValueContainer()
-            let rawString = try container.decode(String.self)
-
-            // Convert to lowercase for case-insensitive matching
-            let lowercased = rawString.lowercased()
-
-            // Try to initialize with the lowercased string
-            guard let format = PhysicalFormat(rawValue: lowercased) else {
-                throw DecodingError.dataCorruptedError(
-                    in: container,
-                    debugDescription:
-                        "Invalid physical format: '\(rawString)'. Expected one of: \(PhysicalFormat.allCases.map { $0.rawValue }.joined(separator: ", "))"
-                )
-            }
-
-            self = format
-        }
-    }
-
 }

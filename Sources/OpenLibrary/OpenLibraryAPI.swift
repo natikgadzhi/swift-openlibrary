@@ -47,6 +47,12 @@ public struct OpenLibraryAPI {
             return URL(string: "https://openlibrary.org/works/\(workKey)/editions.json")!
         }
 
+        /// Fetches a specific work by its key
+        /// Expects a work key in the format of `OL20057658W` without the `/works/` prefix.
+        public static func work(workKey: String) -> URL {
+            return URL(string: "https://openlibrary.org/works/\(workKey).json")!
+        }
+
     }
 
     /// Search OpenLibrary API for books matching this query.
@@ -79,6 +85,22 @@ public struct OpenLibraryAPI {
 
         logger?.info("Returning \(response.entries.count) editions for work key: \(workKey)")
         return response.entries
+    }
+
+    /// Fetches details about a specific work by its key
+    /// - Parameter workKey: OpenLibrary work key (e.g. "OL45804W")
+    /// - Returns: An OpenLibraryWork object containing the work's details
+    ///
+    public func getWork(workKey: String) async throws -> OpenLibraryWork {
+        logger?.info("Fetching work details for key: \(workKey)")
+        let url = Endpoints.work(workKey: workKey)
+        
+        let session = URLSession(configuration: .ephemeral)
+        let (data, _) = try await session.data(from: url)
+        
+        let work = try JSONDecoder().decode(OpenLibraryWork.self, from: data)
+        logger?.info("Retrieved work: \(work.title)")
+        return work
     }
 
 }
