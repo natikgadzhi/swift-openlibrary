@@ -52,7 +52,7 @@ public struct OpenLibraryAPI {
     /// Search OpenLibrary API for books matching this query.
     /// https://openlibrary.org/dev/docs/api/search
     ///
-    public func searchBooks(query: String) async throws -> [OpenLibraryWork] {
+    public func searchBooks(query: String) async throws -> [OpenLibrarySearchResult] {
 
         // Use the language that the user's system has
         let languageCode = Locale.current.language.languageCode?.identifier(.alpha3) ?? "eng"

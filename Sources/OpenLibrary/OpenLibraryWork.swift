@@ -15,14 +15,14 @@ import Foundation
 ///     - Consider adding pagination to the corresponding method
 ///
 public struct OpenLibrarySearchResponse: Codable {
-    public let docs: [OpenLibraryWork]
+    public let docs: [OpenLibrarySearchResult]
 }
 
 
-/// Describes an OpenLibrary Book as a "Worl", meaning — this includes
-/// all available editions, including audiobooks, paperbacks, and electronic books.
-///
-public struct OpenLibraryWork: Codable, Identifiable, Hashable, Sendable {
+/// Describes an OpenLibrary Book as a "Work" in search results.
+/// Depending on the search query, this may include editions or several fields.
+/// 
+public struct OpenLibrarySearchResult: Codable, Identifiable, Hashable, Sendable {
 
     enum CodingKeys: String, CodingKey {
         case key
