@@ -7,7 +7,7 @@
 import Foundation
 
 
-public enum OpenLibraryMocks {
+public enum OpenLibraryMocks: Sendable {
     public static let book = try! JSONDecoder().decode(
         OpenLibrarySearchResponse.self,
         from: OpenLibraryAPIMocks.search.data(using: .utf8)!
@@ -15,7 +15,7 @@ public enum OpenLibraryMocks {
 }
 
 /// Holds mocked API responses
-public enum OpenLibraryAPIMocks {
+public enum OpenLibraryAPIMocks: Sendable {
 
     // MARK: - Twitter and Tear Gas Editions
     //

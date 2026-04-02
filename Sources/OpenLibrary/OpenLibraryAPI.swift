@@ -8,7 +8,7 @@ import Foundation
 
 /// An OpenLibrary API client.
 ///
-public struct OpenLibraryAPI {
+public struct OpenLibraryAPI: Sendable {
 
     let logger: OpenLibraryLoggerProtocol?
 
