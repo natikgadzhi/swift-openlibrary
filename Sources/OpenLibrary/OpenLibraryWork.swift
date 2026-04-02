@@ -14,7 +14,7 @@ import Foundation
 ///     - This has more fields available, i.e. num_found etc.
 ///     - Consider adding pagination to the corresponding method
 ///
-public struct OpenLibrarySearchResponse: Codable {
+public struct OpenLibrarySearchResponse: Codable, Sendable {
     public let docs: [OpenLibrarySearchResult]
 }
 

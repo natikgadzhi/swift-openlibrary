@@ -14,14 +14,14 @@ import Foundation
 ///
 /// If you're building for an Apple platform, `OSLog.Logger` is the easiest option to go with, and it will work out of the box.
 ///
-public protocol OpenLibraryLoggerProtocol {
+public protocol OpenLibraryLoggerProtocol: Sendable {
     /// Basic logging functions that implementations must provide
     func debug(_ message: @autoclosure () -> String)
     func info(_ message: @autoclosure () -> String)
     func error(_ message: @autoclosure () -> String)
 }
 
-// On Apple platforms, patch extend the default Logger to work with KindleAPI
+// On Apple platforms, patch extend the default Logger to work with OpenLibrary
 //
 #if canImport(OSLog)
 
@@ -29,15 +29,18 @@ public protocol OpenLibraryLoggerProtocol {
 
     extension Logger: OpenLibraryLoggerProtocol {
         public func debug(_ message: @autoclosure () -> String) {
-            self.debug("\(message())")
+            let msg = message()
+            self.log(level: .debug, "\(msg)")
         }
 
         public func info(_ message: @autoclosure () -> String) {
-            self.info("\(message())")
+            let msg = message()
+            self.log(level: .info, "\(msg)")
         }
 
         public func error(_ message: @autoclosure () -> String) {
-            self.error("\(message())")
+            let msg = message()
+            self.log(level: .error, "\(msg)")
         }
     }
 

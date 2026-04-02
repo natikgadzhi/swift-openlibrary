@@ -8,7 +8,7 @@ import Foundation
 
 /// Describes OpenLibrary API Editions response
 /// i.e. https://openlibrary.org/works/OL20057658W/editions.json
-public struct OpenLibraryEditionsResponse: Codable {
+public struct OpenLibraryEditionsResponse: Codable, Sendable {
     public let entries: [OpenLibraryEdition]
 }
 
@@ -243,13 +243,13 @@ extension OpenLibraryEdition {
 
 extension OpenLibraryEdition {
 
-    public struct LanguageDescription: Codable {
+    public struct LanguageDescription: Codable, Sendable {
         let key: String
     }
 
     /// OpenLibrary field wrapped in a type + value struct
     ///
-    public struct Description: Codable {
+    public struct Description: Codable, Sendable {
         let type: String
         let value: String
     }
@@ -273,14 +273,14 @@ extension OpenLibraryEdition {
 
     /// Describes a wrapped date time type
     ///
-    public struct OLDateTime: Codable {
+    public struct OLDateTime: Codable, Sendable {
         let type: String
         let value: Date
     }
 
     /// Describes possible book formats, agnostic of the book provider
     ///
-    public enum BookFormat: String, Codable {
+    public enum BookFormat: String, Codable, Sendable {
         case ebook
         case paper
         case audio
