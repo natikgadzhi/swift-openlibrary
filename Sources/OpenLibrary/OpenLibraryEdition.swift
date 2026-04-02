@@ -183,7 +183,9 @@ extension OpenLibraryEdition {
         case coverImageIDs = "covers"
         case physicalFormat = "physical_format"
         case weight
-        case isbn10, isbn13, iccn, oclc
+        case isbn10 = "isbn_10"
+        case isbn13 = "isbn_13"
+        case iccn, oclc
         case tableOfContents = "table_of_contents"
         case language
     }
