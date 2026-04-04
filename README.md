@@ -66,6 +66,26 @@ swift run openlibrary editions OL45883W --limit 5
 
 The library supports logging through a simple protocol `OpenLibraryLoggerProtocol`. On Apple platforms, `OSLog.Logger` is supported out of the box. For other platforms, you can implement the protocol with your preferred logging solution.
 
+## API etiquette
+
+Open Library asks API clients to identify themselves and behave politely:
+
+- Set a descriptive `User-Agent` for your app or service.
+- Provide a contact email when practical.
+- Cache responses where it makes sense for your application.
+- Avoid bursty or high-frequency polling. The Open Library developer docs describe a lower default rate limit for anonymous traffic and a higher one for identified clients.
+
+This package exposes those headers through `OpenLibraryAPI.Configuration`:
+
+```swift
+let api = OpenLibraryAPI(
+    configuration: .init(
+        userAgent: "MyReaderApp/1.2",
+        contactEmail: "api-support@example.com"
+    )
+)
+```
+
 ## License
 
 MIT License. See [LICENSE](LICENSE) file for details. 
