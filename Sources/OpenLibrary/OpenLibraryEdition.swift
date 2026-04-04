@@ -114,7 +114,9 @@ public struct OpenLibraryEdition: Codable, Identifiable, Sendable{
     ///
     public var coverImageURLs: [URL] {
         guard let coverImageIDs = coverImageIDs else { return [] }
-        return coverImageIDs.map { URL(string: "https://covers.openlibrary.org/b/id/\($0)-L.jpg")! }
+        return coverImageIDs.compactMap {
+            OpenLibraryCovers.bookURL(for: .coverID($0), size: .large)
+        }
     }
 
     /// First valid cover URL for this Edition
