@@ -28,9 +28,13 @@ import OpenLibrary
 // Initialize the client, optionally with a logger
 let client = OpenLibraryAPI()
 
-// Search for books in the user's system language
-// Returns an array of OpenLibraryWork objects
-let books = try await client.searchBooks(query: "Foundation Asimov")
+// Search for books in the user's system language.
+// Returns a paginated OpenLibrarySearchResults value.
+let search = try await client.search(query: "Foundation Asimov")
+let books = search.docs
+
+// Fetch a single work by work key.
+let work = try await client.getWork(workKey: "OL45804W")
 
 // Fetch all editions for a specific work
 // Returns an array of OpenLibraryEdition objects
@@ -39,7 +43,13 @@ let editions = try await client.getWorkEditions(workKey: "OL45883W")
 // With logging enabled (on Apple platforms)
 import OSLog
 let logger = Logger(subsystem: "com.yourapp", category: "openlibrary")
-let clientWithLogging = OpenLibraryAPI(logger: logger)
+let clientWithLogging = OpenLibraryAPI(
+    configuration: .init(
+        userAgent: "MyApp/1.0",
+        contactEmail: "me@example.com"
+    ),
+    logger: logger
+)
 ```
 
 ## Logging
