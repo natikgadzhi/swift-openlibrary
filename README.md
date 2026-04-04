@@ -42,6 +42,16 @@ let logger = Logger(subsystem: "com.yourapp", category: "openlibrary")
 let clientWithLogging = OpenLibraryAPI(logger: logger)
 ```
 
+## CLI Example
+
+The package also includes a small executable example target for quick inspection
+from the terminal:
+
+```bash
+swift run openlibrary search "Pattern Recognition" --limit 3
+swift run openlibrary editions OL45883W --limit 5
+```
+
 ## Logging
 
 The library supports logging through a simple protocol `OpenLibraryLoggerProtocol`. On Apple platforms, `OSLog.Logger` is supported out of the box. For other platforms, you can implement the protocol with your preferred logging solution.
