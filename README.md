@@ -47,6 +47,12 @@ let authorPhotoURL = OpenLibraryCovers.authorPhotoURL(for: .authorKey("OL23919A"
 // Fetch a single edition by edition key
 let edition = try await client.getEdition(editionKey: "OL20057658M")
 
+// Fetch a subject page with expanded metadata.
+let subject = try await client.getSubject(
+    subjectSlug: "love",
+    options: .init(details: true, limit: 10)
+)
+
 // With logging enabled (on Apple platforms)
 import OSLog
 let logger = Logger(subsystem: "com.yourapp", category: "openlibrary")
