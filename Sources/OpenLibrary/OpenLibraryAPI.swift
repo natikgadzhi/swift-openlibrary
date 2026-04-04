@@ -21,7 +21,7 @@ public protocol OpenLibraryHTTPSession: Sendable {
 }
 
 extension URLSession: OpenLibraryHTTPSession {
-    /// Loads data for a URL request using `URLSession`.
+    /// Bridges `URLSession` into the sendable transport abstraction.
     public func data(for request: URLRequest) async throws -> (Data, URLResponse) {
         try await data(for: request, delegate: nil)
     }
@@ -101,6 +101,46 @@ public struct OpenLibraryAPI: Sendable {
         }
     }
 
+    /// Request options for the subjects endpoint.
+    public struct SubjectOptions: Sendable {
+        /// Include the expanded subject detail arrays.
+        public let details: Bool
+
+        /// Restrict results to works with ebooks when `true`.
+        public let ebooks: Bool?
+
+        /// Filter works published in a year range string, such as `1500-1600`.
+        public let publishedIn: String?
+
+        /// Limit the number of returned works.
+        public let limit: Int?
+
+        /// Offset into the subject work list.
+        public let offset: Int?
+
+        /// Creates a subject query value.
+        ///
+        /// - Parameters:
+        ///   - details: Include the expanded subject metadata arrays.
+        ///   - ebooks: Restrict results to works with ebooks when provided.
+        ///   - publishedIn: Filter by a published year range string.
+        ///   - limit: Maximum number of works to return.
+        ///   - offset: Starting offset into the work list.
+        public init(
+            details: Bool = false,
+            ebooks: Bool? = nil,
+            publishedIn: String? = nil,
+            limit: Int? = nil,
+            offset: Int? = nil
+        ) {
+            self.details = details
+            self.ebooks = ebooks
+            self.publishedIn = publishedIn
+            self.limit = limit
+            self.offset = offset
+        }
+    }
+
     struct RequestDescriptor: Sendable {
         let path: String
         let queryItems: [URLQueryItem]
@@ -129,7 +169,10 @@ public struct OpenLibraryAPI: Sendable {
         self.init(configuration: .init(), logger: logger)
     }
 
+    /// A list of supported Open Library API endpoints.
     enum Endpoints {
+        /// Search for books (works) providing a query and an optional language code.
+        /// If the language code is not provided, the language filter is omitted.
         static func search(query: String, language: String?) -> RequestDescriptor {
             let effectiveQuery: String
             if let language, !language.isEmpty {
@@ -154,6 +197,7 @@ public struct OpenLibraryAPI: Sendable {
             )
         }
 
+        /// Fetches a single work by work key.
         static func work(workKey: String) -> RequestDescriptor {
             RequestDescriptor(
                 path: "/works/\(workKey).json",
@@ -161,6 +205,7 @@ public struct OpenLibraryAPI: Sendable {
             )
         }
 
+        /// Fetches the list of editions for a work.
         static func editions(workKey: String) -> RequestDescriptor {
             RequestDescriptor(
                 path: "/works/\(workKey)/editions.json",
@@ -168,6 +213,37 @@ public struct OpenLibraryAPI: Sendable {
             )
         }
 
+        /// Fetches a subject page with optional query parameters.
+        static func subject(subjectSlug: String, options: SubjectOptions) -> RequestDescriptor {
+            var queryItems: [URLQueryItem] = []
+
+            if options.details {
+                queryItems.append(URLQueryItem(name: "details", value: "true"))
+            }
+
+            if let ebooks = options.ebooks {
+                queryItems.append(URLQueryItem(name: "ebooks", value: ebooks ? "true" : "false"))
+            }
+
+            if let publishedIn = options.publishedIn {
+                queryItems.append(URLQueryItem(name: "published_in", value: publishedIn))
+            }
+
+            if let limit = options.limit {
+                queryItems.append(URLQueryItem(name: "limit", value: String(limit)))
+            }
+
+            if let offset = options.offset {
+                queryItems.append(URLQueryItem(name: "offset", value: String(offset)))
+            }
+
+            return RequestDescriptor(
+                path: "/subjects/\(subjectSlug).json",
+                queryItems: queryItems
+            )
+        }
+
+        /// Fetches the rating summary for a work.
         static func ratings(workKey: String) -> RequestDescriptor {
             RequestDescriptor(
                 path: "/works/\(workKey)/ratings.json",
@@ -175,6 +251,7 @@ public struct OpenLibraryAPI: Sendable {
             )
         }
 
+        /// Fetches the public bookshelf counts for a work.
         static func bookshelves(workKey: String) -> RequestDescriptor {
             RequestDescriptor(
                 path: "/works/\(workKey)/bookshelves.json",
@@ -274,7 +351,7 @@ public struct OpenLibraryAPI: Sendable {
     /// Fetches all editions for a work, without automatic pagination traversal.
     ///
     /// - Parameter workKey: A work key such as `OL45804W`, without the `/works/` prefix.
-    /// - Returns: The first page of editions for the work.
+    /// - Returns: The first page of edition records for the work.
     public func getWorkEditions(workKey: String) async throws -> [OpenLibraryEdition] {
         logger?.info("Fetching editions for work key: \(workKey)")
 
@@ -324,6 +401,27 @@ public struct OpenLibraryAPI: Sendable {
         )
 
         logger?.info("Returning bookshelves for work key: \(workKey)")
+        return response
+    }
+
+    /// Fetches a subject record and its works.
+    ///
+    /// - Parameters:
+    ///   - subjectSlug: The subject slug without the `/subjects/` prefix.
+    ///   - options: Optional query parameters for details, ebooks, and pagination.
+    /// - Returns: A decoded subject record.
+    public func getSubject(
+        subjectSlug: String,
+        options: SubjectOptions = .init()
+    ) async throws -> OpenLibrarySubject {
+        logger?.info("Fetching subject for slug: \(subjectSlug)")
+
+        let response: OpenLibrarySubject = try await fetch(
+            OpenLibrarySubject.self,
+            from: Endpoints.subject(subjectSlug: subjectSlug, options: options)
+        )
+
+        logger?.info("Returning subject \(response.name) with \(response.works.count) works")
         return response
     }
 

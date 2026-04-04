@@ -651,4 +651,77 @@ public enum OpenLibraryAPIMocks: Sendable {
     "offset": null
 }
 """
+
+    /// https://openlibrary.org/subjects/love.json?details=true
+    ///
+    public static let loveSubject = """
+    {
+      "key": "/subjects/love",
+      "name": "Love",
+      "subject_type": "subject",
+      "work_count": 4918,
+      "ebook_count": 497,
+      "works": [
+        {
+          "key": "/works/OL66534W",
+          "title": "Pride and prejudice",
+          "edition_count": 752,
+          "authors": [
+            {
+              "name": "Jane Austen",
+              "key": "/authors/OL21594A"
+            }
+          ],
+          "has_fulltext": true,
+          "ia": "mansfieldparknov03aust",
+          "cover_id": 1234567
+        }
+      ],
+      "authors": [
+        {
+          "count": 28,
+          "name": "Plato",
+          "key": "/authors/OL12823A"
+        }
+      ],
+      "publishers": [
+        {
+          "count": 54,
+          "name": "Sine nomine"
+        }
+      ],
+      "subjects": [
+        {
+          "count": 914,
+          "name": "Religious aspects of Love",
+          "key": "/subjects/religious_aspects_of_love"
+        }
+      ],
+      "people": [
+        {
+          "count": 44,
+          "name": "Jesus Christ",
+          "key": "/subjects/person:jesus_christ"
+        }
+      ],
+      "places": [
+        {
+          "count": 80,
+          "name": "United States",
+          "key": "/subjects/place:united_states"
+        }
+      ],
+      "times": [
+        {
+          "count": 54,
+          "name": "20th century",
+          "key": "/subjects/time:20th_century"
+        }
+      ],
+      "publishing_history": [
+        [1492, 2],
+        [2010, 56]
+      ]
+    }
+    """
 }
