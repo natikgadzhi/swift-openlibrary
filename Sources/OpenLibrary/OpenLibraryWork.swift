@@ -81,7 +81,8 @@ public struct OpenLibraryWork: Codable, Identifiable, Hashable, Sendable {
 
     /// The first cover image URL if one exists.
     public var coverImageURL: URL? {
-        coverImageURLs.first
+        guard let firstCoverID = covers?.first else { return nil }
+        return OpenLibraryCovers.bookURL(for: .coverID(firstCoverID), size: .large)
     }
 
     /// The normalized author keys associated with this work.
@@ -126,7 +127,6 @@ public struct OpenLibraryWork: Codable, Identifiable, Hashable, Sendable {
         }
     }
 }
-
 extension OpenLibraryWork {
     /// A wrapped text field used by Open Library for some string values.
     public struct TextValue: Codable, Hashable, Sendable {
