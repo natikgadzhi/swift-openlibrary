@@ -143,16 +143,3 @@ struct OpenLibraryClientFoundationTests {
         }
     }
 }
-
-/// A sendable async transport stub used to verify request construction.
-///
-/// This mirrors the production concurrency model: the client awaits a sendable
-/// dependency that performs a request and returns immutable `(Data, URLResponse)`
-/// values. No global mutable state or unsafe concurrency escapes are required.
-private struct SessionStub: OpenLibraryHTTPSession {
-    let handler: @Sendable (URLRequest) async throws -> (Data, URLResponse)
-
-    func data(for request: URLRequest) async throws -> (Data, URLResponse) {
-        try await handler(request)
-    }
-}

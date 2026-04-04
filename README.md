@@ -44,6 +44,9 @@ let editions = try await client.getWorkEditions(workKey: "OL45883W")
 let coverURL = OpenLibraryCovers.bookURL(for: .coverID(9238695), size: .large)
 let authorPhotoURL = OpenLibraryCovers.authorPhotoURL(for: .authorKey("OL23919A"), size: .medium)
 
+// Fetch a single edition by edition key
+let edition = try await client.getEdition(editionKey: "OL20057658M")
+
 // With logging enabled (on Apple platforms)
 import OSLog
 let logger = Logger(subsystem: "com.yourapp", category: "openlibrary")

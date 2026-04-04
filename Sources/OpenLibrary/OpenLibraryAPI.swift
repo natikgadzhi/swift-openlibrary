@@ -6,52 +6,46 @@
 
 import Foundation
 
-/// A small async transport abstraction used by ``OpenLibraryAPI``.
+/// An async transport abstraction for Open Library requests.
 ///
-/// `OpenLibraryAPI` is fully `Sendable`, so its networking dependency also needs
-/// to be sendable under Swift 6's strict concurrency model. This protocol keeps
-/// that dependency narrow and testable while still allowing `URLSession` to be
-/// the default concrete implementation.
+/// ``OpenLibraryAPI`` is `Sendable`, so its request transport must also be
+/// safe to move across concurrency domains. This protocol keeps the dependency
+/// narrow while allowing `URLSession` to remain the default production
+/// transport.
 public protocol OpenLibraryHTTPSession: Sendable {
-    /// Loads data for a request.
+    /// Loads data for a URL request.
     ///
     /// - Parameter request: The request to execute.
-    /// - Returns: The response body and its corresponding URL response.
+    /// - Returns: The raw response body and the corresponding URL response.
     func data(for request: URLRequest) async throws -> (Data, URLResponse)
 }
 
 extension URLSession: OpenLibraryHTTPSession {
+    /// Loads data for a URL request using `URLSession`.
     public func data(for request: URLRequest) async throws -> (Data, URLResponse) {
         try await data(for: request, delegate: nil)
     }
 }
 
-/// An OpenLibrary API client.
+/// An Open Library API client.
 ///
-/// This type is `Sendable`, so you can safely move it across tasks and actor
-/// boundaries. It does not own mutable shared state. Request execution happens
-/// through an injected async transport (`OpenLibraryHTTPSession`) and each call
-/// builds its own immutable `URLRequest`.
+/// The client is intentionally small and immutable. Each call builds its own
+/// request and awaits the injected async transport, which keeps the public API
+/// predictable under Swift 6's strict concurrency checks.
 public struct OpenLibraryAPI: Sendable {
 
     /// Configuration for an ``OpenLibraryAPI`` instance.
-    ///
-    /// The configuration is immutable and `Sendable`, which means you can create
-    /// a client once and safely reuse it from concurrent tasks.
     public struct Configuration: Sendable {
-        /// The base URL used to build endpoint URLs.
+        /// The base URL used to construct endpoint URLs.
         public let baseURL: URL
 
-        /// The async transport used to execute requests.
-        ///
-        /// In production this is normally `URLSession.shared`. In tests you can
-        /// inject a lightweight stub that conforms to ``OpenLibraryHTTPSession``.
+        /// The sendable async transport used to execute requests.
         public let session: any OpenLibraryHTTPSession
 
-        /// A `User-Agent` header identifying the calling application.
+        /// Optional `User-Agent` header for API identification.
         public let userAgent: String?
 
-        /// A contact email used for the `From` header.
+        /// Optional `From` header for API identification.
         public let contactEmail: String?
 
         /// Additional headers applied to every request.
@@ -60,11 +54,11 @@ public struct OpenLibraryAPI: Sendable {
         /// Creates a new client configuration.
         ///
         /// - Parameters:
-        ///   - baseURL: The base Open Library host. Defaults to `https://openlibrary.org`.
+        ///   - baseURL: The Open Library host. Defaults to `https://openlibrary.org`.
         ///   - session: The sendable async transport used to perform requests.
-        ///   - userAgent: A `User-Agent` header value for API identification.
-        ///   - contactEmail: A `From` header value for API identification.
-        ///   - additionalHeaders: Extra headers to include on all requests.
+        ///   - userAgent: Optional `User-Agent` value to identify the app.
+        ///   - contactEmail: Optional `From` value to identify the app.
+        ///   - additionalHeaders: Extra headers applied to every request.
         public init(
             baseURL: URL = URL(string: "https://openlibrary.org")!,
             session: any OpenLibraryHTTPSession = URLSession.shared,
@@ -80,15 +74,15 @@ public struct OpenLibraryAPI: Sendable {
         }
     }
 
-    /// Errors returned by ``OpenLibraryAPI``.
+    /// Errors emitted by ``OpenLibraryAPI``.
     public enum APIError: Error, LocalizedError, Sendable {
-        /// URL construction failed for the supplied endpoint path.
+        /// URL construction failed for the supplied path.
         case invalidURL(path: String)
 
         /// The server returned a non-HTTP response.
         case invalidResponse
 
-        /// The server returned an unsuccessful HTTP status code.
+        /// The server returned a non-2xx response.
         case unexpectedStatusCode(Int, body: String?)
 
         public var errorDescription: String? {
@@ -119,7 +113,7 @@ public struct OpenLibraryAPI: Sendable {
     ///
     /// - Parameters:
     ///   - configuration: The immutable transport and header configuration.
-    ///   - logger: A logger to use for diagnostic messages.
+    ///   - logger: Optional logger for request/response diagnostics.
     public init(
         configuration: Configuration = .init(),
         logger: OpenLibraryLoggerProtocol? = nil
@@ -128,9 +122,9 @@ public struct OpenLibraryAPI: Sendable {
         self.logger = logger
     }
 
-    /// Creates a new client with the default configuration.
+    /// Creates a client with the default configuration.
     ///
-    /// - Parameter logger: A logger to use for diagnostic messages.
+    /// - Parameter logger: Optional logger for request/response diagnostics.
     public init(logger: OpenLibraryLoggerProtocol? = nil) {
         self.init(configuration: .init(), logger: logger)
     }
@@ -150,6 +144,13 @@ public struct OpenLibraryAPI: Sendable {
                     URLQueryItem(name: "q", value: effectiveQuery),
                     URLQueryItem(name: "fields", value: "*,editions"),
                 ]
+            )
+        }
+
+        static func edition(editionKey: String) -> RequestDescriptor {
+            RequestDescriptor(
+                path: "/books/\(normalizedEditionKey(editionKey)).json",
+                queryItems: []
             )
         }
 
@@ -180,6 +181,14 @@ public struct OpenLibraryAPI: Sendable {
                 queryItems: []
             )
         }
+
+        private static func normalizedEditionKey(_ key: String) -> String {
+            if key.starts(with: "/books/") {
+                String(key.dropFirst(7))
+            } else {
+                key
+            }
+        }
     }
 
     /// Searches Open Library and returns the full paginated response envelope.
@@ -194,7 +203,7 @@ public struct OpenLibraryAPI: Sendable {
     ///
     /// - Parameters:
     ///   - query: The search query.
-    ///   - language: An optional ISO 639-2 language code applied as a search filter.
+    ///   - language: An optional ISO 639-2 language code used as a search filter.
     /// - Returns: A paginated collection of search results.
     public func search(
         query: String,
@@ -211,27 +220,39 @@ public struct OpenLibraryAPI: Sendable {
 
     /// Searches Open Library and returns only the search documents.
     ///
-    /// This remains as a convenience wrapper around ``search(query:language:)``.
-    ///
     /// - Parameter query: The search query.
     /// - Returns: The `docs` array from the paginated search response.
     public func searchBooks(query: String) async throws -> [OpenLibrarySearchResult] {
-        let response = try await search(query: query)
-        return response.docs
+        try await search(query: query).docs
     }
 
     /// Searches Open Library and returns only the search documents.
     ///
     /// - Parameters:
     ///   - query: The search query.
-    ///   - language: An optional ISO 639-2 language code applied as a search filter.
+    ///   - language: An optional ISO 639-2 language code used as a search filter.
     /// - Returns: The `docs` array from the paginated search response.
     public func searchBooks(
         query: String,
         language: String?
     ) async throws -> [OpenLibrarySearchResult] {
-        let response = try await search(query: query, language: language)
-        return response.docs
+        try await search(query: query, language: language).docs
+    }
+
+    /// Fetches a single edition.
+    ///
+    /// - Parameter editionKey: An edition key such as `OL20057658M`, with or without the `/books/` prefix.
+    /// - Returns: The decoded edition record.
+    public func getEdition(editionKey: String) async throws -> OpenLibraryEdition {
+        logger?.info("Fetching edition for key: \(editionKey)")
+
+        let response: OpenLibraryEdition = try await fetch(
+            OpenLibraryEdition.self,
+            from: Endpoints.edition(editionKey: editionKey)
+        )
+
+        logger?.info("Returning edition for key: \(editionKey)")
+        return response
     }
 
     /// Fetches an individual work.
@@ -250,7 +271,7 @@ public struct OpenLibraryAPI: Sendable {
         return response
     }
 
-    /// Fetches all editions for a work, without automatically traversing pagination.
+    /// Fetches all editions for a work, without automatic pagination traversal.
     ///
     /// - Parameter workKey: A work key such as `OL45804W`, without the `/works/` prefix.
     /// - Returns: The first page of editions for the work.
@@ -333,6 +354,7 @@ public struct OpenLibraryAPI: Sendable {
         return try Self.makeDecoder().decode(responseType, from: data)
     }
 
+    /// Builds a full URL from the configured base URL and endpoint descriptor.
     private func makeURL(for endpoint: RequestDescriptor) throws -> URL {
         guard var components = URLComponents(
             url: configuration.baseURL,
@@ -354,6 +376,7 @@ public struct OpenLibraryAPI: Sendable {
         return url
     }
 
+    /// Builds a request with the configured identification headers.
     private func makeRequest(url: URL) -> URLRequest {
         var request = URLRequest(url: url)
         request.setValue("application/json", forHTTPHeaderField: "Accept")
@@ -373,10 +396,12 @@ public struct OpenLibraryAPI: Sendable {
         return request
     }
 
+    /// Derives a default ISO 639-2 language tag from the current locale.
     private static func defaultSearchLanguage() -> String? {
         Locale.current.language.languageCode?.identifier(.alpha3)
     }
 
+    /// Creates the decoder used by all response types.
     private static func makeDecoder() -> JSONDecoder {
         JSONDecoder()
     }
