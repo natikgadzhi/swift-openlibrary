@@ -1,10 +1,9 @@
 # OpenLibrary
 
-A Swift library for interacting with the [OpenLibrary](https://openlibrary.org) API. This package provides a clean, type-safe interface to search books, fetch book details, and interact with other OpenLibrary endpoints.
+A Swift library for interacting with the [OpenLibrary](https://openlibrary.org) API. This package provides a clean, type-safe interface to search books, fetch book details, and work with selected OpenLibrary endpoints.
 
 ## Features
 
-- ~~Cross-platform support (iOS, macOS, Linux)~~ nope, not yet.
 - Type-safe API client
 - Async/await based API
 - Configurable logging compatible with `OSLog.Logger`
@@ -64,6 +63,21 @@ let clientWithLogging = OpenLibraryAPI(
     logger: logger
 )
 ```
+
+## Supported Methods
+
+The package currently wraps these Open Library endpoints:
+
+- `search(query:language:)` and `searchBooks(query:language:)` - [Search API](https://openlibrary.org/dev/docs/api/search)
+- `getEdition(editionKey:)` - [Books API](https://openlibrary.org/dev/docs/api/books)
+- `getWork(workKey:)` - [Works API](https://openlibrary.org/dev/docs/api/books)
+- `getWorkEditions(workKey:)` - [Works API](https://openlibrary.org/dev/docs/api/books)
+- `getWorkRatings(workKey:)` - [Work ratings endpoint](https://openlibrary.org/works/OL45804W/ratings.json)
+- `getWorkBookshelves(workKey:)` - [Work bookshelves endpoint](https://openlibrary.org/works/OL45804W/bookshelves.json)
+- `getSubject(subjectSlug:options:)` - [Subjects API](https://openlibrary.org/dev/docs/api/subjects)
+- `OpenLibraryCovers.bookURL(...)` and `OpenLibraryCovers.authorPhotoURL(...)` - [Covers API](https://openlibrary.org/dev/docs/api/covers)
+
+The command line example target also exposes these package capabilities from the terminal.
 
 ## CLI Example
 
