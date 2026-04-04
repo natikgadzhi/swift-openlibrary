@@ -23,7 +23,7 @@ struct OpenLibrarySubjectTests {
     }
 
     @Test func testOpenLibraryAPISubjectEndpoint() async throws {
-        let session = SessionStub { request in
+        let session = SubjectSessionStub { request in
             let url = try #require(request.url)
             let components = try #require(URLComponents(url: url, resolvingAgainstBaseURL: false))
 
@@ -67,7 +67,7 @@ struct OpenLibrarySubjectTests {
 }
 
 /// A sendable async transport stub used to verify subject request construction.
-private struct SessionStub: OpenLibraryHTTPSession {
+private struct SubjectSessionStub: OpenLibraryHTTPSession {
     let handler: @Sendable (URLRequest) async throws -> (Data, URLResponse)
 
     func data(for request: URLRequest) async throws -> (Data, URLResponse) {
