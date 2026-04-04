@@ -64,6 +64,18 @@ struct OpenLibrarySubjectTests {
         #expect(subject.works.count == 1)
         #expect(subject.coverImageURL?.absoluteString == "https://covers.openlibrary.org/b/id/1234567-L.jpg")
     }
+
+    @Test func testOpenLibraryAPISubjectEndpointLive() async throws {
+        let api = OpenLibraryAPI()
+        let subject = try await api.getSubject(
+            subjectSlug: "love",
+            options: .init(details: true, limit: 2)
+        )
+
+        #expect(subject.key == "love")
+        #expect(subject.works.count > 0)
+        #expect(subject.works.first?.title.count ?? 0 > 0)
+    }
 }
 
 /// A sendable async transport stub used to verify subject request construction.

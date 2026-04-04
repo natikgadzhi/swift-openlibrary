@@ -75,4 +75,15 @@ struct OpenLibraryEditionTests {
         #expect(edition.asin == "B06XR259MG")
         #expect(edition.coverImageURL?.absoluteString == "https://covers.openlibrary.org/b/id/10656197-L.jpg")
     }
+
+    @Test func testOpenLibraryAPISingleEditionEndpointLive() async throws {
+        let api = OpenLibraryAPI()
+        let edition = try await api.getEdition(editionKey: "OL20057658M")
+
+        #expect(edition.key.starts(with: "/books/"))
+        #expect(!edition.title.isEmpty)
+        if let coverURL = edition.coverImageURL {
+            #expect(coverURL.scheme == "https")
+        }
+    }
 }
