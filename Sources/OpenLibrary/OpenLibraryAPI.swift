@@ -166,6 +166,20 @@ public struct OpenLibraryAPI: Sendable {
                 queryItems: []
             )
         }
+
+        static func ratings(workKey: String) -> RequestDescriptor {
+            RequestDescriptor(
+                path: "/works/\(workKey)/ratings.json",
+                queryItems: []
+            )
+        }
+
+        static func bookshelves(workKey: String) -> RequestDescriptor {
+            RequestDescriptor(
+                path: "/works/\(workKey)/bookshelves.json",
+                queryItems: []
+            )
+        }
     }
 
     /// Searches Open Library and returns the full paginated response envelope.
@@ -250,6 +264,46 @@ public struct OpenLibraryAPI: Sendable {
 
         logger?.info("Returning \(response.entries.count) editions for work key: \(workKey)")
         return response.entries
+    }
+
+    /// Fetches the rating summary and star histogram for a work.
+    ///
+    /// The returned model mirrors the `/works/{id}/ratings.json` payload and
+    /// keeps the response fully typed for downstream code.
+    ///
+    /// - Parameter workKey: A work key such as `OL18020194W`, without the `/works/` prefix.
+    /// - Returns: The decoded ratings summary for the work.
+    public func getWorkRatings(workKey: String) async throws -> OpenLibraryWorkRatingsResponse {
+        logger?.info("Fetching ratings for work key: \(workKey)")
+
+        let response: OpenLibraryWorkRatingsResponse = try await fetch(
+            OpenLibraryWorkRatingsResponse.self,
+            from: Endpoints.ratings(workKey: workKey)
+        )
+
+        logger?.info("Returning ratings for work key: \(workKey)")
+        return response
+    }
+
+    /// Fetches the public bookshelf counts for a work.
+    ///
+    /// The returned model mirrors the `/works/{id}/bookshelves.json` payload and
+    /// provides typed access to the three bookshelf counters that Open Library exposes.
+    ///
+    /// - Parameter workKey: A work key such as `OL18020194W`, without the `/works/` prefix.
+    /// - Returns: The decoded bookshelf summary for the work.
+    public func getWorkBookshelves(
+        workKey: String
+    ) async throws -> OpenLibraryWorkBookshelvesResponse {
+        logger?.info("Fetching bookshelves for work key: \(workKey)")
+
+        let response: OpenLibraryWorkBookshelvesResponse = try await fetch(
+            OpenLibraryWorkBookshelvesResponse.self,
+            from: Endpoints.bookshelves(workKey: workKey)
+        )
+
+        logger?.info("Returning bookshelves for work key: \(workKey)")
+        return response
     }
 
     /// Performs a request and decodes the JSON payload.
