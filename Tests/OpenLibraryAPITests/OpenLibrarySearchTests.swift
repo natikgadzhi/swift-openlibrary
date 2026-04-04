@@ -8,12 +8,20 @@ import OpenLibrary
 
 struct OpenLibrarySearchTests {
     @Test func testSearchAPIResponse() async throws {
-        let response = try JSONDecoder().decode(OpenLibrarySearchResponse.self, from: OpenLibraryAPIMocks.search.data(using: .utf8)!)
+        let response = try JSONDecoder().decode(
+            OpenLibrarySearchResults.self,
+            from: OpenLibraryAPIMocks.search.data(using: .utf8)!
+        )
+        #expect(response.numFound == 1)
+        #expect(response.start == 0)
         #expect(response.docs.count == 1)
     }
 
     @Test func testSearchReturnsBookWithCorrectImageAndAuthor() async throws {
-        let response = try JSONDecoder().decode(OpenLibrarySearchResponse.self, from: OpenLibraryAPIMocks.search.data(using: .utf8)!)
+        let response = try JSONDecoder().decode(
+            OpenLibrarySearchResults.self,
+            from: OpenLibraryAPIMocks.search.data(using: .utf8)!
+        )
         let work = response.docs.first!
         #expect( work.coverImageURL != nil )
         #expect( work.coverImageURL!.absoluteString == "https://covers.openlibrary.org/b/id/\(work.coverImageID!)-L.jpg")
@@ -21,9 +29,10 @@ struct OpenLibrarySearchTests {
 
     @Test func testOpenLibraryAPISearchEndpoint() async throws {
         let api = OpenLibraryAPI()
-        let books = try await api.searchBooks(query: "Pattern Recognition")
-        #expect(books.count != 0)
+        let response = try await api.search(query: "Pattern Recognition")
+        #expect(response.numFound > 0)
+        #expect(response.docs.count != 0)
 
-        print(books.first!.key)
+        print(response.docs.first!.key)
     }
 } 
