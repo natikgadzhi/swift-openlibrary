@@ -6,23 +6,22 @@
 
 import Foundation
 
-
 public enum OpenLibraryMocks: Sendable {
-    public static let book = try! JSONDecoder().decode(
-        OpenLibrarySearchResponse.self,
-        from: OpenLibraryAPIMocks.search.data(using: .utf8)!
-    ).docs.first!
+  public static let book = try! JSONDecoder().decode(
+    OpenLibrarySearchResponse.self,
+    from: OpenLibraryAPIMocks.search.data(using: .utf8)!
+  ).docs.first!
 }
 
 /// Holds mocked API responses
 public enum OpenLibraryAPIMocks: Sendable {
 
-    // MARK: - Twitter and Tear Gas Editions
-    //
+  // MARK: - Twitter and Tear Gas Editions
+  //
 
-    /// https://openlibrary.org/works/OL20057658W/editions.json
-    ///
-    public static let twitterAndTearGasEditions = """
+  /// https://openlibrary.org/works/OL20057658W/editions.json
+  ///
+  public static let twitterAndTearGasEditions = """
     {
       "links": {
         "self": "/works/OL20057658W/editions.json",
@@ -409,252 +408,252 @@ public enum OpenLibraryAPIMocks: Sendable {
     }
     """
 
-    /// seach.json?q=Twitter%20and%20tear%20gas
-    ///
-    public static let search = """
-{
-    "numFound": 1,
-    "start": 0,
-    "numFoundExact": true,
-    "docs": [
-        {
-            "author_key": [
-                "OL7615491A"
-            ],
-            "author_name": [
-                "Zeynep Tufekci"
-            ],
-            "cover_edition_key": "OL27847723M",
-            "cover_i": 9238695,
-            "ddc": [
-                "303.484"
-            ],
-            "ebook_access": "printdisabled",
-            "ebook_count_i": 1,
-            "edition_count": 4,
-            "edition_key": [
-                "OL34760135M",
-                "OL31981489M",
-                "OL27847723M",
-                "OL27237667M"
-            ],
-            "first_publish_year": 2017,
-            "format": [
-                "paperback",
-                "mp3 cd"
-            ],
-            "has_fulltext": true,
-            "ia": [
-                "twitterteargaspo0000tufe"
-            ],
-            "ia_collection": [
-                "internetarchivebooks",
-                "printdisabled"
-            ],
-            "ia_collection_s": "internetarchivebooks;printdisabled",
-            "isbn": [
-                "9781543628913",
-                "1543628915",
-                "0300234171",
-                "0300259298",
-                "9780300215120",
-                "0300215126",
-                "9780300259292",
-                "9780300234176"
-            ],
-            "key": "/works/OL20057658W",
-            "language": [
-                "eng"
-            ],
-            "last_modified_i": 1703022225,
-            "lcc": [
-                "HM-0883.00000000.T8 2017",
-                "HM-0742.00000000.T84 2017eb",
-                "HM-0883.00000000",
-                "HM-0742.00000000.T84 2017"
-            ],
-            "lccn": [
-                "2016963570"
-            ],
-            "number_of_pages_median": 343,
-            "oclc": [
-                "961312425",
-                "984692647"
-            ],
-            "osp_count": 239,
-            "printdisabled_s": "OL27237667M",
-            "public_scan_b": false,
-            "publish_date": [
-                "Jul 25, 2017",
-                "2017",
-                "Apr 24, 2018",
-                "2021"
-            ],
-            "publish_year": [
-                2017,
-                2018,
-                2021
-            ],
-            "publisher": [
-                "Audible Studios on Brilliance Audio",
-                "Yale University Press",
-                "Audible Studios on Brilliance"
-            ],
-            "seed": [
-                "/books/OL34760135M",
-                "/books/OL31981489M",
-                "/books/OL27847723M",
-                "/books/OL27237667M",
-                "/works/OL20057658W",
-                "/authors/OL7615491A",
-                "/subjects/social_media",
-                "/subjects/protest_movements",
-                "/subjects/political_aspects",
-                "/subjects/online_social_networks",
-                "/subjects/social_movements",
-                "/subjects/internet_political_aspects",
-                "/subjects/71.38_social_movements",
-                "/subjects/society",
-                "/subjects/protestbewegung",
-                "/subjects/governance",
-                "/subjects/soziale_bewegung",
-                "/subjects/internet",
-                "/subjects/aspect_politique",
-                "/subjects/mouvements_sociaux",
-                "/subjects/contestation",
-                "/subjects/political_science",
-                "/subjects/essays",
-                "/subjects/government",
-                "/subjects/general",
-                "/subjects/national",
-                "/subjects/reference",
-                "/subjects/twitter",
-                "/subjects/social_media_--_political_aspects",
-                "/subjects/online_social_networks_--_political_aspects"
-            ],
-            "title": "Twitter and tear gas",
-            "title_suggest": "Twitter and tear gas",
-            "title_sort": "Twitter and tear gas",
-            "type": "work",
-            "id_amazon": [
-                "0300234171",
-                "B06XR259MG"
-            ],
-            "id_wikidata": [
-                "Q56277653"
-            ],
-            "subject": [
-                "Social media",
-                "Protest movements",
-                "Political aspects",
-                "Online social networks",
-                "Social movements",
-                "Internet, political aspects",
-                "71.38 social movements",
-                "Society",
-                "Protestbewegung",
-                "Governance",
-                "Soziale Bewegung",
-                "Internet",
-                "Aspect politique",
-                "Mouvements sociaux",
-                "Contestation",
-                "POLITICAL SCIENCE",
-                "Essays",
-                "Government",
-                "General",
-                "National",
-                "Reference",
-                "Twitter",
-                "Social media -- Political aspects",
-                "Online social networks -- Political aspects"
-            ],
-            "ratings_average": 5.0,
-            "ratings_sortable": 2.6973765,
-            "ratings_count": 2,
-            "ratings_count_1": 0,
-            "ratings_count_2": 0,
-            "ratings_count_3": 0,
-            "ratings_count_4": 0,
-            "ratings_count_5": 2,
-            "readinglog_count": 22,
-            "want_to_read_count": 17,
-            "currently_reading_count": 1,
-            "already_read_count": 4,
-            "publisher_facet": [
-                "Audible Studios on Brilliance",
-                "Audible Studios on Brilliance Audio",
-                "Yale University Press"
-            ],
-            "subject_facet": [
-                "71.38 social movements",
-                "Aspect politique",
-                "Contestation",
-                "Essays",
-                "General",
-                "Governance",
-                "Government",
-                "Internet",
-                "Internet, political aspects",
-                "Mouvements sociaux",
-                "National",
-                "Online social networks",
-                "Online social networks -- Political aspects",
-                "POLITICAL SCIENCE",
-                "Political aspects",
-                "Protest movements",
-                "Protestbewegung",
-                "Reference",
-                "Social media",
-                "Social media -- Political aspects",
-                "Social movements",
-                "Society",
-                "Soziale Bewegung",
-                "Twitter"
-            ],
-            "_version_": 1800843499535335424,
-            "lcc_sort": "HM-0742.00000000.T84 2017eb",
-            "author_facet": [
-                "OL7615491A Zeynep Tufekci"
-            ],
-            "subject_key": [
-                "71.38_social_movements",
-                "aspect_politique",
-                "contestation",
-                "essays",
-                "general",
-                "governance",
-                "government",
-                "internet",
-                "internet_political_aspects",
-                "mouvements_sociaux",
-                "national",
-                "online_social_networks",
-                "online_social_networks_--_political_aspects",
-                "political_aspects",
-                "political_science",
-                "protest_movements",
-                "protestbewegung",
-                "reference",
-                "social_media",
-                "social_media_--_political_aspects",
-                "social_movements",
-                "society",
-                "soziale_bewegung",
-                "twitter"
-            ],
-            "ddc_sort": "303.484"
-        }
-    ],
-    "num_found": 1,
-    "q": "Twitter and tear gas",
-    "offset": null
-}
-"""
+  /// seach.json?q=Twitter%20and%20tear%20gas
+  ///
+  public static let search = """
+    {
+        "numFound": 1,
+        "start": 0,
+        "numFoundExact": true,
+        "docs": [
+            {
+                "author_key": [
+                    "OL7615491A"
+                ],
+                "author_name": [
+                    "Zeynep Tufekci"
+                ],
+                "cover_edition_key": "OL27847723M",
+                "cover_i": 9238695,
+                "ddc": [
+                    "303.484"
+                ],
+                "ebook_access": "printdisabled",
+                "ebook_count_i": 1,
+                "edition_count": 4,
+                "edition_key": [
+                    "OL34760135M",
+                    "OL31981489M",
+                    "OL27847723M",
+                    "OL27237667M"
+                ],
+                "first_publish_year": 2017,
+                "format": [
+                    "paperback",
+                    "mp3 cd"
+                ],
+                "has_fulltext": true,
+                "ia": [
+                    "twitterteargaspo0000tufe"
+                ],
+                "ia_collection": [
+                    "internetarchivebooks",
+                    "printdisabled"
+                ],
+                "ia_collection_s": "internetarchivebooks;printdisabled",
+                "isbn": [
+                    "9781543628913",
+                    "1543628915",
+                    "0300234171",
+                    "0300259298",
+                    "9780300215120",
+                    "0300215126",
+                    "9780300259292",
+                    "9780300234176"
+                ],
+                "key": "/works/OL20057658W",
+                "language": [
+                    "eng"
+                ],
+                "last_modified_i": 1703022225,
+                "lcc": [
+                    "HM-0883.00000000.T8 2017",
+                    "HM-0742.00000000.T84 2017eb",
+                    "HM-0883.00000000",
+                    "HM-0742.00000000.T84 2017"
+                ],
+                "lccn": [
+                    "2016963570"
+                ],
+                "number_of_pages_median": 343,
+                "oclc": [
+                    "961312425",
+                    "984692647"
+                ],
+                "osp_count": 239,
+                "printdisabled_s": "OL27237667M",
+                "public_scan_b": false,
+                "publish_date": [
+                    "Jul 25, 2017",
+                    "2017",
+                    "Apr 24, 2018",
+                    "2021"
+                ],
+                "publish_year": [
+                    2017,
+                    2018,
+                    2021
+                ],
+                "publisher": [
+                    "Audible Studios on Brilliance Audio",
+                    "Yale University Press",
+                    "Audible Studios on Brilliance"
+                ],
+                "seed": [
+                    "/books/OL34760135M",
+                    "/books/OL31981489M",
+                    "/books/OL27847723M",
+                    "/books/OL27237667M",
+                    "/works/OL20057658W",
+                    "/authors/OL7615491A",
+                    "/subjects/social_media",
+                    "/subjects/protest_movements",
+                    "/subjects/political_aspects",
+                    "/subjects/online_social_networks",
+                    "/subjects/social_movements",
+                    "/subjects/internet_political_aspects",
+                    "/subjects/71.38_social_movements",
+                    "/subjects/society",
+                    "/subjects/protestbewegung",
+                    "/subjects/governance",
+                    "/subjects/soziale_bewegung",
+                    "/subjects/internet",
+                    "/subjects/aspect_politique",
+                    "/subjects/mouvements_sociaux",
+                    "/subjects/contestation",
+                    "/subjects/political_science",
+                    "/subjects/essays",
+                    "/subjects/government",
+                    "/subjects/general",
+                    "/subjects/national",
+                    "/subjects/reference",
+                    "/subjects/twitter",
+                    "/subjects/social_media_--_political_aspects",
+                    "/subjects/online_social_networks_--_political_aspects"
+                ],
+                "title": "Twitter and tear gas",
+                "title_suggest": "Twitter and tear gas",
+                "title_sort": "Twitter and tear gas",
+                "type": "work",
+                "id_amazon": [
+                    "0300234171",
+                    "B06XR259MG"
+                ],
+                "id_wikidata": [
+                    "Q56277653"
+                ],
+                "subject": [
+                    "Social media",
+                    "Protest movements",
+                    "Political aspects",
+                    "Online social networks",
+                    "Social movements",
+                    "Internet, political aspects",
+                    "71.38 social movements",
+                    "Society",
+                    "Protestbewegung",
+                    "Governance",
+                    "Soziale Bewegung",
+                    "Internet",
+                    "Aspect politique",
+                    "Mouvements sociaux",
+                    "Contestation",
+                    "POLITICAL SCIENCE",
+                    "Essays",
+                    "Government",
+                    "General",
+                    "National",
+                    "Reference",
+                    "Twitter",
+                    "Social media -- Political aspects",
+                    "Online social networks -- Political aspects"
+                ],
+                "ratings_average": 5.0,
+                "ratings_sortable": 2.6973765,
+                "ratings_count": 2,
+                "ratings_count_1": 0,
+                "ratings_count_2": 0,
+                "ratings_count_3": 0,
+                "ratings_count_4": 0,
+                "ratings_count_5": 2,
+                "readinglog_count": 22,
+                "want_to_read_count": 17,
+                "currently_reading_count": 1,
+                "already_read_count": 4,
+                "publisher_facet": [
+                    "Audible Studios on Brilliance",
+                    "Audible Studios on Brilliance Audio",
+                    "Yale University Press"
+                ],
+                "subject_facet": [
+                    "71.38 social movements",
+                    "Aspect politique",
+                    "Contestation",
+                    "Essays",
+                    "General",
+                    "Governance",
+                    "Government",
+                    "Internet",
+                    "Internet, political aspects",
+                    "Mouvements sociaux",
+                    "National",
+                    "Online social networks",
+                    "Online social networks -- Political aspects",
+                    "POLITICAL SCIENCE",
+                    "Political aspects",
+                    "Protest movements",
+                    "Protestbewegung",
+                    "Reference",
+                    "Social media",
+                    "Social media -- Political aspects",
+                    "Social movements",
+                    "Society",
+                    "Soziale Bewegung",
+                    "Twitter"
+                ],
+                "_version_": 1800843499535335424,
+                "lcc_sort": "HM-0742.00000000.T84 2017eb",
+                "author_facet": [
+                    "OL7615491A Zeynep Tufekci"
+                ],
+                "subject_key": [
+                    "71.38_social_movements",
+                    "aspect_politique",
+                    "contestation",
+                    "essays",
+                    "general",
+                    "governance",
+                    "government",
+                    "internet",
+                    "internet_political_aspects",
+                    "mouvements_sociaux",
+                    "national",
+                    "online_social_networks",
+                    "online_social_networks_--_political_aspects",
+                    "political_aspects",
+                    "political_science",
+                    "protest_movements",
+                    "protestbewegung",
+                    "reference",
+                    "social_media",
+                    "social_media_--_political_aspects",
+                    "social_movements",
+                    "society",
+                    "soziale_bewegung",
+                    "twitter"
+                ],
+                "ddc_sort": "303.484"
+            }
+        ],
+        "num_found": 1,
+        "q": "Twitter and tear gas",
+        "offset": null
+    }
+    """
 
-    /// https://openlibrary.org/subjects/love.json?details=true
-    ///
-    public static let loveSubject = """
+  /// https://openlibrary.org/subjects/love.json?details=true
+  ///
+  public static let loveSubject = """
     {
       "key": "/subjects/love",
       "name": "Love",
